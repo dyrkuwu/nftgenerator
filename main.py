@@ -3,7 +3,7 @@ import nftgenerator
 NFTS = int(input("How many NFT's you want to generate? (int): "))
 
 for i in range(NFTS):
-    response = nftgenerator.generate_nft((255, 255, 255))
+    response = nftgenerator.generate_nft()
     image = response[0]
     hash = response[1]
 

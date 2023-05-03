@@ -2,20 +2,13 @@ import hashlib
 import random
 from PIL import Image, ImageDraw, ImageFont
 
-def generate_nft(color):
-    # Generate a random number to be used as the seed for the generator
+def generate_nft():
     seed = random.randint(0, 1000000)
-    # Use the seed to initialize the random number generator
     random.seed(seed)
-    # Use the seed to create a unique hash
     hash = hashlib.sha256(str(seed).encode()).hexdigest()
-    # Generate a list of random RGB values
     colors = [(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)) for _ in range(10)]
-    # Create a new image with the color palette
     im = Image.new('RGB', (512, 512), colors[0])
-    # Define the pattern size
     pattern_size = 32
-    # Draw the pattern on the image
     draw = ImageDraw.Draw(im)
     for x in range(0, 512, pattern_size):
         for y in range(0, 512, pattern_size):
@@ -26,7 +19,6 @@ def generate_nft(color):
                 draw.ellipse((x, y, x+pattern_size, y+pattern_size), fill=colors[random.randint(1, len(colors)-1)])
             else:
                 draw.polygon([(x, y), (x+pattern_size/2, y+pattern_size), (x+pattern_size, y)], fill=colors[random.randint(1, len(colors)-1)])
-    # Add the hash text to the image
     font = ImageFont.truetype('arial.ttf', 24)
     text = hash[:32] + '\n' + hash[32:64] + '\n' + hash[64:]
     text_width, text_height = draw.textsize(text, font)
@@ -40,7 +32,6 @@ def generate_nft(color):
     text_width, text_height = draw.textsize(text, font)
     text_x = (512 - text_width) / 2
     text_y = (512 - text_height) / 2
-    # Invert the text color based on the average RGB value of the background image
     r, g, b = im.convert('RGB').getpixel((0, 0))
     avg_color = (r + g + b) // 3
     if avg_color < 128:
@@ -48,5 +39,4 @@ def generate_nft(color):
     else:
         text_color = (0, 0, 0)
     draw.multiline_text((text_x, text_y), text, font=font, fill=text_color, align='center')
-    # Save the image as a PNG file
     return [im, hash]
